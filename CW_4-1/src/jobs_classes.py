@@ -15,3 +15,27 @@ class Vacancy:
 
     def __gt__(self, other):
         return self.salary > other.salary
+
+    def __lt__(self, other):
+        if other.salary is None:
+            # e.g., 10 < None
+            return False
+        if self.salary is None:
+            # e.g., None < 10
+            return True
+
+        return self.salary < other.salary
+
+
+class HHVacancy(Vacancy):
+    """ HeadHunter Vacancy """
+
+    def __str__(self):
+        return f'HH: {self.title}, зарплата: {self.salary} руб/мес'
+
+
+class SJVacancy(Vacancy):
+    """ SuperJob Vacancy """
+
+    def __str__(self):
+        return f'SJ: {self.title}, зарплата: {self.salary} руб/мес' \

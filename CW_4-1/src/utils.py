@@ -1,4 +1,4 @@
-from src.jobs_classes import Vacancy, HHvacancy, SJvacancy
+from src.jobs_classes import Vacancy, HHVacancy, SJVacancy
 
 
 def sorting(vacancies: list[Vacancy]) -> list[Vacancy]:
@@ -7,13 +7,13 @@ def sorting(vacancies: list[Vacancy]) -> list[Vacancy]:
 
 
 def get_top(vacancies: list[Vacancy], top_count: int) -> list[Vacancy]:
-    f""" Должен возвращать {top_count} записей из вакансий по зарплате """
+    """ Должен возвращать {top_count} записей из вакансий по зарплате """
     return list(sorted(vacancies, reverse=True)[:top_count])
 
 
 def get_hh_vacancies_list(connector) -> list[HHVacancy]:
     vacancies = [
-        HHvacancy(
+        HHVacancy(
             title=vacancy['name'],
             link=vacancy['alternate_url'],
             description=vacancy['snippet'],
@@ -22,12 +22,12 @@ def get_hh_vacancies_list(connector) -> list[HHVacancy]:
     return vacancies
 
 
-def get_sj_vacancies_list(connector) -> list[SJvacancy]:
+def get_sj_vacancies_list(connector) -> list[SJVacancy]:
     vacancies = [
-        SJvacancy(
+        SJVacancy(
             title=vacancy['profession'],
             link=vacancy['link'],
             description=vacancy['candidat'],
             salary=vacancy['payment_from'])
-        from vacancy in connector.select({})]
+        for vacancy in connector.select({})]
     return vacancies
