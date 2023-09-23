@@ -15,8 +15,10 @@ def get_company_info(company_id: int) -> dict:
         'hh_id': response.get('id'),
         'name': response.get('name'),
         'description': response.get('description'),
-
+        'url_company': response.get('alternate_url'),
+        'area': response.get('area')['name']
     }
+    return data
 
 
 def get_vacancies_company(company_id: int) -> list[dict]:
