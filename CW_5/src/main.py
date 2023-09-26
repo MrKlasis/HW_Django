@@ -1,5 +1,6 @@
 from dbmanager import DBManager
 
+
 def create_table(db_manager, table_name):
     conn = db_manager.connect()
     cursor = conn.cursor()
