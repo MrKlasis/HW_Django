@@ -48,5 +48,6 @@ def main():
     for data in extracted_data:
         print(data)
 
+
 if __name__ == "__main__":
     main()
