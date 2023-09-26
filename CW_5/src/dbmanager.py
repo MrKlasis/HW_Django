@@ -1,6 +1,7 @@
 import requests
 import psycopg2
 
+
 class DBManager:
     def __init__(self, db_name, db_user, db_password, db_host, db_port):
         self.db_name = db_name
