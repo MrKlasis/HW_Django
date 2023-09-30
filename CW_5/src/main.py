@@ -1,54 +1,56 @@
 from dbmanager import DBManager
 
-
-def create_table(db_manager, table_name):
-    conn = db_manager.connect()
-    cursor = conn.cursor()
-
-    query = f"CREATE TABLE IF NOT EXISTS {table_name} (id SERIAL PRIMARY KEY, company VARCHAR(255), title VARCHAR(255), salary VARCHAR(255), link VARCHAR(255))"
-    cursor.execute(query)
-
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-
 def main():
-    db_manager = DBManager("CW_5", "080475", "5432")
-    table_name = "CW_5"
+    # Параметры подключения к базе данных PostgreSQL
+    host = 'localhost'
+    port = 5432
+    database = 'CW_5'
+    user = 'Smirnov'
+    password = '080475'
 
-    create_table(db_manager, table_name)
+    # Создание экземпляра класса DBManager
+    db_manager = DBManager(host=host, port=port, database=database, user=user, password=password)
 
-    # Получение списка всех компаний и количества вакансий
+    # Создание таблицы vacancies, если она не существует
+    create_table_query = """
+        CREATE TABLE IF NOT EXISTS vacancies (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255),
+            salary_min INTEGER,
+            salary_max INTEGER,
+            url VARCHAR(255),
+            company_id INTEGER
+        );
+    """
+    cur = db_manager.conn.cursor()
+    cur.execute(create_table_query)
+    db_manager.conn.commit()
+
+    # Пример использования функций класса DBManager
     companies_and_vacancies = db_manager.get_companies_and_vacancies_count()
-    db_manager.insert_data(table_name, companies_and_vacancies)
-
-    # Получение списка всех вакансий
     all_vacancies = db_manager.get_all_vacancies()
-    db_manager.insert_data(table_name, all_vacancies)
-
-    # Получение средней зарплаты по вакансиям
     avg_salary = db_manager.get_avg_salary()
-    print("Average Salary:", avg_salary)
+    vacancies_with_higher_salary = db_manager.get_vacancies_with_higher_salary()
+    vacancies_with_keyword = db_manager.get_vacancies_with_keyword('python')
 
-    # Получение списка вакансий с зарплатой выше средней
-    high_salary_vacancies = db_manager.get_vacancies_with_higher_salary()
-    print("High Salary Vacancies:")
-    for vacancy in high_salary_vacancies:
-        print(vacancy)
+    # Вывод результатов
+    print("Список компаний и количество вакансий:")
+    for company, vacancy_count in companies_and_vacancies:
+        print(f"{company}: {vacancy_count}")
 
-    # Получение списка вакансий с ключевым словом "python"
-    keyword_vacancies = db_manager.get_vacancies_with_keyword("python")
-    print("Keyword Vacancies:")
-    for vacancy in keyword_vacancies:
-        print(vacancy)
+    print("\nСписок всех вакансий:")
+    for company, vacancy, salary_min, salary_max, url in all_vacancies:
+        print(f"Компания: {company}, Вакансия: {vacancy}, Зарплата: {salary_min}-{salary_max}, URL: {url}")
 
-    # Извлечение данных из таблицы
-    extracted_data = db_manager.select_data(table_name)
-    print("Extracted Data:")
-    for data in extracted_data:
-        print(data)
+    print("\nСредняя зарплата по вакансиям:", avg_salary)
 
+    print("\nСписок вакансий с зарплатой выше средней:")
+    for company, vacancy, salary_min, salary_max, url in vacancies_with_higher_salary:
+        print(f"Компания: {company}, Вакансия: {vacancy}, Зарплата: {salary_min}-{salary_max}, URL: {url}")
 
-if __name__ == "__main__":
+    print("\nСписок вакансий с ключевым словом 'python':")
+    for company, vacancy, salary_min, salary_max, url in vacancies_with_keyword:
+        print(f"Компания: {company}, Вакансия: {vacancy}, Зарплата: {salary_min}-{salary_max}, URL: {url}")
+
+if __name__ == '__main__':
     main()
