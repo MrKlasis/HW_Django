@@ -1,30 +1,10 @@
 from dbmanager import DBManager
+from settings import host, port, database, user, password
 
 def main():
-    # Параметры подключения к базе данных PostgreSQL
-    host = 'localhost'
-    port = 5432
-    database = 'CW_5'
-    user = 'Smirnov'
-    password = '080475'
-
+    
     # Создание экземпляра класса DBManager
     db_manager = DBManager(host=host, port=port, database=database, user=user, password=password)
-
-    # Создание таблицы vacancies, если она не существует
-    create_table_query = """
-        CREATE TABLE IF NOT EXISTS vacancies (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(255),
-            salary_min INTEGER,
-            salary_max INTEGER,
-            url VARCHAR(255),
-            company_id INTEGER
-        );
-    """
-    cur = db_manager.conn.cursor()
-    cur.execute(create_table_query)
-    db_manager.conn.commit()
 
     # Пример использования функций класса DBManager
     companies_and_vacancies = db_manager.get_companies_and_vacancies_count()
